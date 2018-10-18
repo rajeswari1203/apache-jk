@@ -1,0 +1,27 @@
+#
+# Cookbook Name:: learn_chef_httpd
+# Recipe:: default
+#
+# Copyright (c) 2016 The Authors, All Rights Reserved.
+package 'httpd'
+
+service 'httpd' do
+  action [:enable, :start]
+end
+remote_file "jk-connector.tar.gz" do
+  source 'http://mirrors.estointernet.in/apache/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.46-src.tar.gz'
+  action :create
+end
+bash 'Extract tomcat archive' do
+  code <<-EOH
+     
+    tar -zxvf jk-connector.tar.gz --strip 1
+    cd jk-connector/native
+    ./configure --with-apxs=/usr/sbin/apxs
+       make
+       make install
+  EOH
+end
+ package 'gcc' do
+ package_name 'gcc'
+end
